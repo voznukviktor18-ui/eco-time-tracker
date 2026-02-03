@@ -1,0 +1,231 @@
+/* Основные стили для системы "ЭКО Сервис" */
+:root {
+    --primary-color: #006400; /* Темно-зеленый из ТЗ */
+    --secondary-color: #228B22;
+    --light-color: #f8fff8;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --success-color: #28a745;
+    --gray-color: #6c757d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f0f9f0;
+    color: #333;
+    line-height: 1.6;
+    padding: 10px;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 100, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Шапка */
+header {
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+header i {
+    margin-right: 10px;
+}
+
+/* Карточки */
+.card {
+    background: var(--light-color);
+    border-left: 5px solid var(--primary-color);
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.card h2 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+
+.card h2 i {
+    margin-right: 10px;
+}
+
+/* Формы */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border 0.3s;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+/* Кнопки */
+.btn {
+    display: inline-block;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.btn i {
+    margin-right: 8px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #004d00;
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #1e7e34;
+}
+
+.btn-warning {
+    background-color: var(--warning-color);
+    color: #212529;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Информационный текст */
+.info-text {
+    font-size: 0.9rem;
+    color: var(--gray-color);
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Блок статуса */
+.status-box {
+    background: #e9ffe9;
+    border: 1px dashed var(--success-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Ссылка на админку */
+.admin-link {
+    text-align: center;
+    margin: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.admin-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+}
+
+.admin-link a:hover {
+    text-decoration: underline;
+}
+
+.admin-link i {
+    margin-right: 8px;
+}
+
+/* Футер */
+footer {
+    text-align: center;
+    padding: 15px;
+    color: var(--gray-color);
+    font-size: 0.85rem;
+    background: #f8fff8;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+    .container {
+        border-radius: 10px;
+    }
+    header h1 {
+        font-size: 1.2rem;
+    }
+    .card {
+        margin: 15px 10px;
+        padding: 15px;
+    }
+    .btn {
+        padding: 12px 15px;
+    }
+}
