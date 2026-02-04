@@ -6,17 +6,26 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbwfIS-BWcFVVU8P1henlBGB
 // Функция для отправки запросов к Google Apps Script
 async function callGoogleScript(action, data = {}) {
     try {
-        const response = await fetch(API_URL, {
+        // Формируем URL с параметром для обхода CORS
+        const url = new URL(API_URL);
+        
+        // Для POST запросов используем fetch с правильными заголовками
+        const response = await fetch(url.toString(), {
             method: 'POST',
-            mode: 'cors', // ✅ Изменили на 'cors' для работы с GitHub Pages
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: JSON.stringify({
                 action: action,
                 ...data
             })
         });
+        
+        // Проверяем статус ответа
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         
         const result = await response.json();
         return result;
@@ -33,7 +42,7 @@ async function callGoogleScript(action, data = {}) {
 async function loadDrivers() {
     const result = await callGoogleScript('getDrivers');
     
-    if (result.success !== false) {
+    if (result.success !== false && Array.isArray(result)) {
         const select = document.getElementById('driver-select');
         select.innerHTML = '<option value="">-- Выберите себя --</option>';
         
@@ -43,6 +52,8 @@ async function loadDrivers() {
             option.textContent = `${driver.name} (${driver.role})`;
             select.appendChild(option);
         });
+    } else {
+        console.error('Ошибка загрузки водителей:', result);
     }
 }
 
@@ -50,7 +61,7 @@ async function loadDrivers() {
 async function loadLoaders() {
     const result = await callGoogleScript('getLoaders');
     
-    if (result.success !== false) {
+    if (result.success !== false && Array.isArray(result)) {
         const select1 = document.getElementById('loader1-select');
         const select2 = document.getElementById('loader2-select');
         
@@ -77,6 +88,8 @@ async function loadLoaders() {
         // Восстанавливаем выбранные значения
         select1.value = currentVal1;
         select2.value = currentVal2;
+    } else {
+        console.error('Ошибка загрузки грузчиков:', result);
     }
 }
 
@@ -88,7 +101,7 @@ function showNotification(message, type = 'info') {
 
 // Загружаем данные при старте
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Загружаем данные...');
     loadDrivers();
     loadLoaders();
 });
-
