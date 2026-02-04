@@ -1,13 +1,14 @@
 // script.js - Общие функции для работы с Google Apps Script API
 
 // 🔹 ВАЖНО! Замените этот URL на URL вашего развернутого Google Apps Script веб-приложения
-const API_URL = 'https://script.google.com/macros/s/AKfycbwfIS-BWcFVVU8P1henlBGB2czBUX12_IOisDcLuvm5hK42DdoP3zbAuRK4yxJvOHg/exec';
+const API_URL = 'https://script.google.com/macros/s/ВАШ_ВЕБ_APP_URL/exec';
 
 // Функция для отправки запросов к Google Apps Script
 async function callGoogleScript(action, data = {}) {
     try {
         const response = await fetch(API_URL, {
             method: 'POST',
+            mode: 'cors', // ✅ Изменили на 'cors' для работы с GitHub Pages
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -59,6 +60,10 @@ async function loadLoaders() {
         
         // Очищаем и заполняем оба селекта
         const baseOptions = '<option value="">-- Не выбрано --</option>';
+        
+        // Очищаем текущие опции (кроме первой)
+        select1.innerHTML = baseOptions;
+        select2.innerHTML = baseOptions;
         
         result.forEach(loader => {
             const option = document.createElement('option');
