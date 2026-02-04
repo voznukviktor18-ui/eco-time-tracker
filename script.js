@@ -1,7 +1,7 @@
 // script.js - Общие функции для работы с Google Apps Script API
 
 // 🔹 ВАЖНО! Замените этот URL на URL вашего развернутого Google Apps Script веб-приложения
-const API_URL = 'https://script.google.com/macros/s/ВАШ_ВЕБ_APP_URL/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwfIS-BWcFVVU8P1henlBGB2czBUX12_IOisDcLuvm5hK42DdoP3zbAuRK4yxJvOHg/exec';
 
 // Функция для отправки запросов к Google Apps Script
 async function callGoogleScript(action, data = {}) {
@@ -91,3 +91,4 @@ document.addEventListener('DOMContentLoaded', function() {
     loadDrivers();
     loadLoaders();
 });
+
