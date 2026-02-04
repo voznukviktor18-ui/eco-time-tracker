@@ -3,23 +3,25 @@
 // 🔹 ВАЖНО! Замените этот URL на URL вашего развернутого Google Apps Script веб-приложения
 const API_URL = 'https://script.google.com/macros/s/AKfycbwfIS-BWcFVVU8P1henlBGB2czBUX12_IOisDcLuvm5hK42DdoP3zbAuRK4yxJvOHg/exec';
 
-// Функция для отправки запросов к Google Apps Script
+// Функция для отправки GET запросов к Google Apps Script (обход CORS)
 async function callGoogleScript(action, data = {}) {
     try {
-        // Формируем URL с параметром для обхода CORS
+        // Формируем URL с параметрами
         const url = new URL(API_URL);
+        url.searchParams.append('action', action);
         
-        // Для POST запросов используем fetch с правильными заголовками
+        // Добавляем данные как параметры для GET запроса
+        if (Object.keys(data).length > 0) {
+            url.searchParams.append('data', JSON.stringify(data));
+        }
+        
+        // Используем GET запрос вместо POST для обхода CORS preflight
         const response = await fetch(url.toString(), {
-            method: 'POST',
+            method: 'GET',
+            mode: 'cors',
             headers: {
-                'Content-Type': 'application/json',
                 'Accept': 'application/json',
-            },
-            body: JSON.stringify({
-                action: action,
-                ...data
-            })
+            }
         });
         
         // Проверяем статус ответа
@@ -38,11 +40,36 @@ async function callGoogleScript(action, data = {}) {
     }
 }
 
+// Функция для отправки POST запросов (для действий, которые изменяют данные)
+async function callGoogleScriptPost(action, data = {}) {
+    try {
+        // Используем форму для отправки данных (обход CORS)
+        const formData = new FormData();
+        formData.append('action', action);
+        formData.append('data', JSON.stringify(data));
+        
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            mode: 'cors',
+            body: formData
+        });
+        
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('Ошибка при вызове API:', error);
+        return {
+            success: false,
+            message: 'Сетевая ошибка. Проверьте интернет.'
+        };
+    }
+}
+
 // Загружаем список водителей при загрузке страницы
 async function loadDrivers() {
     const result = await callGoogleScript('getDrivers');
     
-    if (result.success !== false && Array.isArray(result)) {
+    if (result && !result.success && Array.isArray(result)) {
         const select = document.getElementById('driver-select');
         select.innerHTML = '<option value="">-- Выберите себя --</option>';
         
@@ -52,6 +79,7 @@ async function loadDrivers() {
             option.textContent = `${driver.name} (${driver.role})`;
             select.appendChild(option);
         });
+        console.log('Водители загружены:', result.length, 'человек');
     } else {
         console.error('Ошибка загрузки водителей:', result);
     }
@@ -61,18 +89,14 @@ async function loadDrivers() {
 async function loadLoaders() {
     const result = await callGoogleScript('getLoaders');
     
-    if (result.success !== false && Array.isArray(result)) {
+    if (result && !result.success && Array.isArray(result)) {
         const select1 = document.getElementById('loader1-select');
         const select2 = document.getElementById('loader2-select');
-        
-        // Сохраняем текущие выбранные значения
-        const currentVal1 = select1.value;
-        const currentVal2 = select2.value;
         
         // Очищаем и заполняем оба селекта
         const baseOptions = '<option value="">-- Не выбрано --</option>';
         
-        // Очищаем текущие опции (кроме первой)
+        // Очищаем текущие опции
         select1.innerHTML = baseOptions;
         select2.innerHTML = baseOptions;
         
@@ -85,9 +109,7 @@ async function loadLoaders() {
             select2.appendChild(option.cloneNode(true));
         });
         
-        // Восстанавливаем выбранные значения
-        select1.value = currentVal1;
-        select2.value = currentVal2;
+        console.log('Грузчики загружены:', result.length, 'человек');
     } else {
         console.error('Ошибка загрузки грузчиков:', result);
     }
